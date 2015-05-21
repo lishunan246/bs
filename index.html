@@ -60,6 +60,12 @@
 
                 this.entityA=addEntities(0,10);
                 this.entityB=addEntities(400,100);
+
+                var el = this.createElement();
+                el.font = '20pt Arial';
+                el.fillStyle = 'red';
+                el.fillText('Hello', 580, 30);
+                stage.append(el);
             },
             render: function(stage)
             {
