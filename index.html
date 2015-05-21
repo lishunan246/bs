@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="js/jquery-2.1.4.js"></script>
+    <script src="js/canvasengine-1.3.2.all.min.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.css">
+
+    <script src="js/bootstrap.js"></script>
+
+</head>
+<body>
+    <div class="container">
+        <canvas id="canvas" width="640" height="480" style="border:1px solid #000000;"></canvas>
+    </div>
+
+
+
+    <script>
+        var canvas=CE.defines("canvas")
+                .extend(Input)
+                .extend(Hit)
+                .ready(function(){
+                    canvas.Scene.call("MyScene");
+                });
+
+        canvas.Scene.new({
+            name:"MyScene",
+            materials:{
+                images:{
+                    "blue":"images/blue.jpg",
+                    "red":"images/red.jpg"
+                }
+            },
+            called:function(stage)
+            {
+               // this.el=this.createElement();
+                //stage.append(this.el);
+            },
+            preload: function(stage, pourcent, material) {
+                //this.el.drawImage("blue", 0, 0, pourcent + "%");
+                console.log("draw");
+
+                canvas.Input.keyDown([Input.Left,Input.Right,Input.Up,Input.Bottom]);
+                canvas.Input.keyUp([Input.Left,Input.Right,Input.Up,Input.Bottom]);
+            },
+            ready: function(stage, params) {
+                function addEntities(x,y){
+                    var entity;
+                    entity = Class.new("Entity", [stage]);
+                    entity.rect(0,0,50,50);
+                    entity.position(x,y);
+                    entity.el.drawImage("blue",x,y);
+                    stage.append(entity.el);
+                    return entity;
+                }
+
+                this.entityA=addEntities(0,10);
+                this.entityB=addEntities(400,100);
+            },
+            render: function(stage)
+            {
+                if(canvas.Input.isPressed(Input.Right))
+                {
+                    this.entityA.el.x++;
+                    this.entityA.move(1,null);
+                }
+                if(canvas.Input.isPressed(Input.Left))
+                {
+                    this.entityA.el.x--;
+                    this.entityA.move(-1,null);
+                }
+                if(canvas.Input.isPressed(Input.Up))
+                {
+                    this.entityA.el.y--;
+                    this.entityA.move(null,-1);
+                }
+                if(canvas.Input.isPressed(Input.Bottom))
+                {
+                    this.entityA.el.y++;
+                    this.entityA.move(null,1);
+                }
+
+                this.entityB.el.drawImage("blue");
+                //this.entityA.el.drawImage("blue");
+
+                this.entityA.hit([this.entityB],function(state,el){
+                    if(state=="over")
+                    {
+                        el.drawImage("red");
+                        console.log("1");
+                    }
+                    else
+                    {
+                        console.log("0");
+                        el.drawImage("blue");
+                    }
+                });
+                stage.refresh();
+            },//will prevent from displaying
+            exit: function(stage) {
+
+            }
+
+        })
+
+
+    </script>
+</body>
+</html>
