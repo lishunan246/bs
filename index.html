@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/bootstrap-theme.css">
 
     <script src="js/bootstrap.js"></script>
+    <script src="js/extends/socket.io.min.js"></script>
 
 </head>
 <body>
@@ -66,6 +67,13 @@
                 el.fillStyle = 'red';
                 el.fillText('Hello', 580, 30);
                 stage.append(el);
+
+                CE.connectServer('http://localhost', 8333);
+                this.loadEvents();
+                CE.io.emit("start");
+            },
+            load: function (text) {
+                console.log(text);
             },
             render: function(stage)
             {
